@@ -1,18 +1,16 @@
-import java.io.IOException;
-
 public class MainClass {
 
-	public static void main(String abc[]) {
+    public static void main(String[] args) {
 
-		CourseFromJavaClass courseFromJavaClass = new CourseFromJavaClass(4, "vaisul", "James");
+        CourseFromJavaClass courseFromJavaClass = new CourseFromJavaClass(4, "vaisul", "James");
 
-		RestAPI restAPI = new RestAPI();
-		try {
-			restAPI.submitRestAPIRequest(courseFromJavaClass);
-		} catch (IOException e) {
+        RestAPI restAPI = new RestAPI();
+        CourseFromJavaClass responseCourse = restAPI.submitRestAPIRequest(courseFromJavaClass);
 
-			e.printStackTrace();
-		}
-	}
+        System.out.println("Response from server:");
+        System.out.println("EmpId: " + responseCourse.getEmpId());
+        System.out.println("First Name: " + responseCourse.getFirstName());
+        System.out.println("Last Name: " + responseCourse.getLastName());
+    }
 
 }

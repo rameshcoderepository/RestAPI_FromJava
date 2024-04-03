@@ -1,69 +1,34 @@
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import com.google.gson.Gson;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
 public class RestAPI {
 
-	public String submitRestAPIRequest(CourseFromJavaClass course) throws IOException {
+	private static final String JWT_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJVbmlxVGVjaCIsImV4cCI6MTcxMjE2MDM4MywiaWF0IjoxNzEyMTQyMzgzfQ.33IE2-DQ-ZZwMf8DE1FQo9HR4EdHjtzwhZAeq-a4SQ44u68SycUeAo4XB9FBFhGaBIGIMjgrmUsNXnJ8YIcv2Q";
 
-		String iteratorResponse = "";
-		String scheduleResponse = new String();
-		String restEndPointURI = null;
+	public CourseFromJavaClass submitRestAPIRequest(CourseFromJavaClass course) {
+		String restEndPointURI = "http://localhost:8080/course";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.set("Authorization", "Bearer " + JWT_TOKEN);
+		HttpEntity<CourseFromJavaClass> requestEntity = new HttpEntity<>(course, headers);
 
-		try {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> responseEntity = restTemplate.postForEntity(restEndPointURI, requestEntity,
+				String.class);
 
-			restEndPointURI = "";
+		String serverResponse = responseEntity.getBody();
 
-			URL url = new URL(restEndPointURI);
-			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-			connection.setDoOutput(true);
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", "application/json");
+		System.out.println("*********************"+serverResponse);
+		// Extract the empId value from the server response
+		String[] parts = serverResponse.split(",");
+		int empId = Integer.parseInt(parts[0].substring(parts[0].indexOf("=") + 1).trim());
+		String firstName = parts[1].substring(parts[1].indexOf("=") + 1).trim();
+		String lastName = parts[2].substring(parts[2].indexOf("=") + 1).trim();
 
-			connection.setReadTimeout(300000);
-			connection.setConnectTimeout(300000);
+		// Create a new instance of CourseFromJavaClass
+		CourseFromJavaClass responseCourse = new CourseFromJavaClass(empId, firstName, lastName);
 
-			Gson gson = new Gson();
-			String jsonObject = gson.toJson(course);
-
-			int responsecode = 0;
-
-			try (DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream())) {
-				dataOutputStream.write(jsonObject.getBytes());
-			}
-
-			responsecode = connection.getResponseCode();
-
-			try (InputStream ins = responsecode >= 400 ? connection.getErrorStream() : connection.getInputStream();
-					BufferedReader in = new BufferedReader(new InputStreamReader(ins))) {
-
-				if (responsecode == 200) {
-
-					while ((iteratorResponse = in.readLine()) != null) {
-						iteratorResponse.toString();
-						scheduleResponse += iteratorResponse;
-					}
-
-				}
-				if (responsecode != 200) {
-					throw new Exception();
-				}
-
-			} catch (Exception e) {
-				System.out.println(e);
-			}
-
-		} finally {
-		}
-
-		return scheduleResponse;
+		return responseCourse;
 	}
 
 }

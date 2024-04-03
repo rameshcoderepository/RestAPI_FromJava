@@ -1,45 +1,48 @@
-import java.util.Date;
 
 public class CourseFromJavaClass {
 
-	private long id;
-	private String name;
-	private Date birthDate;
+	private int empId;
+	private String firstName;
+	private String lastName;
 
-	public CourseFromJavaClass(long id, String name, Date birthDate) {
+	public CourseFromJavaClass() {
+
+	}
+
+	public CourseFromJavaClass(int empId, String firstName, String lastName) {
 		super();
-		this.id = id;
-		this.name = name;
-		this.birthDate = birthDate;
+		this.empId = empId;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
-	public long getId() {
-		return id;
+	public int getEmpId() {
+		return empId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setEmpId(int empId) {
+		this.empId = empId;
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public Date getBirthDate() {
-		return birthDate;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	@Override
 	public String toString() {
-		return "CourseFromJavaClass [id=" + id + ", name=" + name + ", birthDate=" + birthDate + "]";
+		return "CourseFromJavaClass [empId=" + empId + ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
 
 }
